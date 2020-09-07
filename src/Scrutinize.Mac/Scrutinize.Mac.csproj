@@ -1,0 +1,27 @@
+<Project Sdk="Xamarin.Mac.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <ZipArchiveOnBuild>true</ZipArchiveOnBuild>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>Scrutinize.Mac</RootNamespace>
+    <EnableCodeSigning>false</EnableCodeSigning>
+    <UseSGen>false</UseSGen>
+    <LinkMode>None</LinkMode>
+    <AOTMode>None</AOTMode>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Scrutinize.Core\Scrutinize.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Xamarin.Preferences" Version="0.32.0" />
+  </ItemGroup>
+  <Target Name="FixMonoBundle" AfterTargets="_CompileToNative" DependsOnTargets="_GenerateBundleName">
+    <ItemGroup>
+      <OverrideMonoBundleFiles Include="$(OutputPath)*.dll" />
+      <OverrideMonoBundleFiles Include="/Library/Frameworks/Xamarin.Mac.framework/Versions/Current/lib/mono/4.5/Facades/System.Console.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OverrideMonoBundleFiles)" DestinationFolder="$(AppBundleDir)\Contents\MonoBundle\" />
+    <MakeDir Directories="$(AppBundleDir)\Contents\Libraries\" />
+    <Copy SourceFiles="$(AppBundleDir)\Contents\MonoBundle\libmono-native.dylib" DestinationFolder="$(AppBundleDir)\Contents\Libraries\" />
+  </Target>
+</Project>

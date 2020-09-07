@@ -1,0 +1,5 @@
+{
+  "msbuild-sdks": {
+    "Xamarin.Mac.Sdk": "0.32.0"
+  }
+}
